@@ -1,3 +1,4 @@
+import openai
 from openai import OpenAI
 import argparse
 from pathlib import Path
@@ -19,14 +20,18 @@ def create_output_path(output_path):
     output_dir.mkdir(exist_ok=True)
 
 def generate_image(client, prompt, model, quality, size, style):
-    response = client.images.generate(
-        prompt=prompt,
-        model=model,
-        quality=quality,
-        response_format="b64_json",
-        size=size,
-        style=style,
-    )
+    try:
+        response = client.images.generate(
+            prompt=prompt,
+            model=model,
+            quality=quality,
+            response_format="b64_json",
+            size=size,
+            style=style,
+        )
+    except openai.OpenAIError as e:
+        print(e.http_status)
+        print(e.error)
     return response
 
 def save_image(file_path, response):
