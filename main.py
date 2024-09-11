@@ -8,6 +8,7 @@ def parse_arguments():
     parser = argparse.ArgumentParser(description="Generate images using DALL·E")
     parser.add_argument("prompt", type=str, help="Image generation prompt")
     parser.add_argument("--model", type=str, default="dall-e-2", help="Model to use. Must be one of 'dall-e-2' or 'dall-e-3'.")
+    parser.add_argument("--num-images", type=int, default=1, help="Number of images to generate. For dall-e-3, only 1 image can be generated.")
     parser.add_argument("--quality", type=str, default="standard", help="Image quality. Must be one of 'standard' or 'hd'.")
     parser.add_argument("--response-format", type=str, default="url", help="Response format. Must be one of 'url' or 'b64_json'.")
     parser.add_argument("--size", type=str, default="1024x1024", help="Image size. Must be one of 1024x1024, 1792x1024, or 1024x1792.")
@@ -20,11 +21,12 @@ def create_output_path(output_path):
     output_dir = Path.cwd() if last_slash_index == -1 else Path.cwd() / output_path[:last_slash_index]
     output_dir.mkdir(exist_ok=True)
 
-def generate_image(client, prompt, model, quality, response_format, size, style):
+def generate_image(client, prompt, model, num_images, quality, response_format, size, style):
     try:
         response = client.images.generate(
             prompt=prompt,
             model=model,
+            n=num_images,
             quality=quality,
             response_format=response_format,
             size=size,
@@ -46,7 +48,7 @@ def main():
     args = parse_arguments()
     create_output_path(args.output)
     response = generate_image(client, args.prompt,
-     args.model, args.quality, args.response_format, args.size, args.style)
+     args.model, args.num_images, args.quality, args.response_format, args.size, args.style)
     if args.response_format == "b64_json":
         save_image(args.output, response)
     else:
