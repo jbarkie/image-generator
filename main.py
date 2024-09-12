@@ -7,12 +7,12 @@ from base64 import b64decode
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Generate images using DALL·E")
     parser.add_argument("prompt", type=str, help="Image generation prompt")
-    parser.add_argument("--model", type=str, default="dall-e-2", help="Model to use. Must be one of 'dall-e-2' or 'dall-e-3'.")
+    parser.add_argument("--model", type=str, default="dall-e-2", choices=["dall-e-2", "dall-e-3"], help="Model to use. Must be one of 'dall-e-2' or 'dall-e-3'.")
     parser.add_argument("--num-images", type=int, default=1, help="Number of images to generate. For dall-e-3, only 1 image can be generated.")
-    parser.add_argument("--quality", type=str, default="standard", help="Image quality. Must be one of 'standard' or 'hd'.")
-    parser.add_argument("--response-format", type=str, default="url", help="Response format. Must be one of 'url' or 'b64_json'.")
-    parser.add_argument("--size", type=str, default="1024x1024", help="Image size. Must be one of 1024x1024, 1792x1024, or 1024x1792.")
-    parser.add_argument("--style", type=str, default="vivid", help="Generated image style. Must be one of 'vivid' or 'natural'.")
+    parser.add_argument("--quality", type=str, default="standard", choices=["standard", "hd"] ,help="Image quality. Must be one of 'standard' or 'hd'.")
+    parser.add_argument("--response-format", type=str, default="url", choices=["url", "b64_json"], help="Response format. Must be one of 'url' or 'b64_json'.")
+    parser.add_argument("--size", type=str, default="1024x1024", choices=["1024x1024", "1792x1024", "1024x1792"], help="Image size. Must be one of 1024x1024, 1792x1024, or 1024x1792.")
+    parser.add_argument("--style", type=str, default="vivid", choices=["vivid", "natural"], help="Generated image style. Must be one of 'vivid' or 'natural'.")
     parser.add_argument("--output", type=str, default="output/image.png", help="Output file path.")
     return parser.parse_args()
 
