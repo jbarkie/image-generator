@@ -31,22 +31,27 @@ def validate_arguments(args, parser):
 
     return args
 
+def assemble_args_for_model(args):
+    kwargs = {
+        "prompt": args.prompt,
+        "model": args.model,
+        "n": args.num_images,
+        "response_format": args.response_format,
+        "size": args.size,
+        "style": args.style,
+    }
+    if args.model == "dall-e-3":
+        kwargs["quality"] = args.quality
+    return kwargs
+
 def create_output_path(output_path):
     last_slash_index = output_path.rfind("/")
     output_dir = Path.cwd() if last_slash_index == -1 else Path.cwd() / output_path[:last_slash_index]
     output_dir.mkdir(exist_ok=True)
 
-def generate_image(client, prompt, model, num_images, quality, response_format, size, style):
+def generate_image(client, kwargs):
     try:
-        response = client.images.generate(
-            prompt=prompt,
-            model=model,
-            n=num_images,
-            quality=quality,
-            response_format=response_format,
-            size=size,
-            style=style,
-        )
+        response = client.images.generate(**kwargs)
     except openai.OpenAIError as e:
         print(e.http_status)
         print(e.error)
@@ -63,8 +68,8 @@ def main():
     parser = parse_arguments()
     args = validate_arguments(parser.parse_args(), parser)
     create_output_path(args.output)
-    response = generate_image(client, args.prompt,
-     args.model, args.num_images, args.quality, args.response_format, args.size, args.style)
+    kwargs = assemble_args_for_model(args)
+    response = generate_image(client, kwargs)
     if args.response_format == "b64_json":
         save_image(args.output, response)
     else:
