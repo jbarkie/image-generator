@@ -11,7 +11,7 @@ def parse_arguments():
     parser.add_argument("--num-images", type=int, help="Number of images to generate. For dall-e-3, only 1 image can be generated.")
     parser.add_argument("--quality", type=str, choices=["standard", "hd"] ,help="Image quality. Must be one of 'standard' or 'hd'.")
     parser.add_argument("--response-format", type=str, default="url", choices=["url", "b64_json"], help="Response format. Must be one of 'url' or 'b64_json'.")
-    parser.add_argument("--size", type=str, default="1024x1024", choices=["1024x1024", "1792x1024", "1024x1792"], help="Image size. Must be one of 1024x1024, 1792x1024, or 1024x1792.")
+    parser.add_argument("--size", type=str, default="1024x1024", choices=["256x256", "512x512", "1024x1024", "1792x1024", "1024x1792"], help="Image size. Must be one of 256x256, 512x512, or 1024x1024 for dall-e-2. Must be one of 1024x1024, 1792x1024, or 1024x1792 for dall-e-3.")
     parser.add_argument("--style", type=str, choices=["vivid", "natural"], help="Generated image style. Must be one of 'vivid' or 'natural'.")
     parser.add_argument("--output", type=str, default="output/image.png", help="Output file path.")
     return parser
@@ -28,6 +28,14 @@ def validate_arguments(args, parser):
         args.quality = "standard" # default quality
     if args.quality is not None and args.model != "dall-e-3":
         parser.error("The 'quality' argument is only supported for the dall-e-3 model.")
+
+    # Validate size argument
+    DALLE_2_SIZES = ["256x256", "512x512", "1024x1024"]
+    DALLE_3_SIZES = ["1024x1024", "1792x1024", "1024x1792"]
+    if args.model == "dall-e-2" and args.size not in DALLE_2_SIZES:
+        parser.error(f"The 'size' argument must be one of {DALLE_2_SIZES} for the dall-e-2 model.")
+    if args.model == "dall-e-3" and args.size not in DALLE_3_SIZES:
+        parser.error(f"The 'size' argument must be one of {DALLE_3_SIZES} for the dall-e-3 model.")
 
     # Validate style argument
     if args.style is None and args.model == "dall-e-3":
