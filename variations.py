@@ -34,13 +34,20 @@ def write_image_data_json(response):
     with open(output_path, mode="w", encoding="utf-8") as file:
         json.dump(response.to_dict(), file)
 
+def save_image(response):
+    for index, image_dict in enumerate(response.data):
+        image_data = b64decode(image_dict.b64_json)
+        file_path = Path.cwd() / "output" / f"{response.created}_{index}.png"
+
+        with open(file_path, "wb") as png:
+            png.write(image_data)
+
 def main():
     client = OpenAI()
     args = parse_arguments()
     response = create_variation(client, args)
     write_image_data_json(response)
-    
-
+    save_image(response)
 
 if __name__ == "__main__":
     main()
