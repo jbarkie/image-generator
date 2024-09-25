@@ -23,19 +23,24 @@ def create_variation(client, args):
                 size="256x256",
                 response_format="b64_json"
             )
-
-            output_path = Path.cwd() / "responses" / f"{response.created}.json"
-
-            with open(output_path, mode="w", encoding="utf-8") as file:
-                json.dump(response.to_dict(), file)
-
         except openai.OpenAIError as e:
             print(e)
+    
+    return response
+
+def write_image_data_json(response):
+    output_path = Path.cwd() / "responses" / f"{response.created}.json"
+
+    with open(output_path, mode="w", encoding="utf-8") as file:
+        json.dump(response.to_dict(), file)
 
 def main():
     client = OpenAI()
     args = parse_arguments()
-    create_variation(client, args)
+    response = create_variation(client, args)
+    write_image_data_json(response)
+    
+
 
 if __name__ == "__main__":
     main()
