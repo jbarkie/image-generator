@@ -5,6 +5,8 @@ from openai import OpenAI
 from base64 import b64decode
 from pathlib import Path
 
+from utils import save_image, write_image_data_json
+
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Create variations of images generated using DALL·E")
     parser.add_argument("path", type=str, help="Path to the JSON file containing the image data.")
@@ -27,20 +29,6 @@ def create_variation(client, args):
             print(e)
     
     return response
-
-def write_image_data_json(response):
-    output_path = Path.cwd() / "responses" / f"{response.created}.json"
-
-    with open(output_path, mode="w", encoding="utf-8") as file:
-        json.dump(response.to_dict(), file)
-
-def save_image(response):
-    for index, image_dict in enumerate(response.data):
-        image_data = b64decode(image_dict.b64_json)
-        file_path = Path.cwd() / "output" / f"{response.created}_{index}.png"
-
-        with open(file_path, "wb") as png:
-            png.write(image_data)
 
 def main():
     client = OpenAI()

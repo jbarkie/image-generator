@@ -2,8 +2,8 @@ import openai
 from openai import OpenAI
 import argparse
 from pathlib import Path
-from base64 import b64decode
-import json
+
+from utils import save_image, write_image_data_json
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Generate images using DALL·E")
@@ -72,18 +72,6 @@ def generate_image(client, kwargs):
         print(e.error)
     return response
 
-def write_image_json(response):
-    path = Path.cwd() / "responses" / f"{response.created}.json"
-    path.parent.mkdir(exist_ok=True)
-    with open(path, mode="w", encoding="utf-8") as file:
-        json.dump(response.to_dict(), file)
-
-def save_image(file_path, response):
-    for _, image_dict in enumerate(response.data):
-        image_data = b64decode(image_dict.b64_json)
-        with open(file_path, "wb") as png:
-            png.write(image_data)
-
 def main():
     client = OpenAI()
     parser = parse_arguments()
@@ -92,7 +80,7 @@ def main():
     kwargs = assemble_args_for_model(args)
     response = generate_image(client, kwargs)
     if args.response_format == "b64_json":
-        write_image_json(response)
+        write_image_data_json(response)
         save_image(args.output, response)
     else:
         print(f"Access image for up to one hour at the following URL: {response.data[0].url}")
