@@ -9,10 +9,10 @@ def write_image_data_json(response):
     with open(path, mode="w", encoding="utf-8") as file:
         json.dump(response.to_dict(), file)
 
-def save_image(response):
+def save_image(response, output_path):
     for index, image_dict in enumerate(response.data):
         image_data = b64decode(image_dict.b64_json)
-        file_path = Path.cwd() / "output" / f"{response.created}_{index}.png"
+        file_path = Path.cwd() / f"{output_path}_{index}.png"
 
         with open(file_path, "wb") as png:
             png.write(image_data)
