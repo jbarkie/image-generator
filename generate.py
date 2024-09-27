@@ -81,7 +81,7 @@ def main():
     response = generate_image(client, kwargs)
     if args.response_format == "b64_json":
         write_image_data_json(response)
-        save_image(args.output, response)
+        save_image(response, args.output)
     else:
         print(f"Access image for up to one hour at the following URL: {response.data[0].url}")
 
