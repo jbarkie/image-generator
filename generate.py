@@ -14,7 +14,7 @@ def parse_arguments():
     parser.add_argument("--response-format", type=str, default="url", choices=["url", "b64_json"], help="Response format. Must be one of 'url' or 'b64_json'.")
     parser.add_argument("--size", type=str, default="1024x1024", choices=["256x256", "512x512", "1024x1024", "1792x1024", "1024x1792"], help="Image size. Must be one of 256x256, 512x512, or 1024x1024 for dall-e-2. Must be one of 1024x1024, 1792x1024, or 1024x1792 for dall-e-3.")
     parser.add_argument("--style", type=str, choices=["vivid", "natural"], help="Generated image style. Must be one of 'vivid' or 'natural'.")
-    parser.add_argument("--output", type=str, default="output/image.png", help="Output file path.")
+    parser.add_argument("--output", type=str, default="output/image", help="Output file path.")
     return parser
 
 def validate_arguments(args, parser):

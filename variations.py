@@ -11,7 +11,7 @@ def parse_arguments():
     parser = argparse.ArgumentParser(description="Create variations of images generated using DALL·E")
     parser.add_argument("path", type=str, help="Path to the JSON file containing the image data.")
     parser.add_argument("--num-variations", type=int, default=3, help="Number of variations to create.")
-    parser.add_argument("--output", type=str, default="output", help="Output file path for variations.")
+    parser.add_argument("--output", type=str, default="output/variation", help="Output file path for variations.")
     return parser.parse_args()
 
 def create_variation(client, args):
