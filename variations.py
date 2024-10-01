@@ -35,8 +35,9 @@ def main():
     client = OpenAI()
     args = parse_arguments()
     response = create_variation(client, args)
-    write_image_data_json(response)
+    json_path = write_image_data_json(response)
     save_image(response, args.output)
+    print(json_path)
 
 if __name__ == "__main__":
     main()

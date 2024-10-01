@@ -8,6 +8,7 @@ def write_image_data_json(response):
     path.parent.mkdir(exist_ok=True)
     with open(path, mode="w", encoding="utf-8") as file:
         json.dump(response.to_dict(), file)
+    return path
 
 def save_image(response, output_path):
     for index, image_dict in enumerate(response.data):

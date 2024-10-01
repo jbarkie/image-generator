@@ -80,8 +80,9 @@ def main():
     kwargs = assemble_args_for_model(args)
     response = generate_image(client, kwargs)
     if args.response_format == "b64_json":
-        write_image_data_json(response)
+        json_path = write_image_data_json(response)
         save_image(response, args.output)
+        print(json_path)
     else:
         print(f"Access image for up to one hour at the following URL: {response.data[0].url}")
 
